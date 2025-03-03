@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://7pgwscyj6655"]
+
+[ext_resource type="Texture2D" uid="uid://ddg6bp3matalx" path="res://purple.png" id="1_0smbm"]
+[ext_resource type="Script" path="res://level.gd" id="1_l14sw"]
+[ext_resource type="PackedScene" uid="uid://daaevg70f2ns" path="res://player.tscn" id="2_junyw"]
+[ext_resource type="PackedScene" uid="uid://c1wgs84y2svce" path="res://maze.tscn" id="4_kb2sd"]
+[ext_resource type="Texture2D" uid="uid://dklknu2uj2hmg" path="res://ufoGreen.png" id="5_vet02"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1l612"]
+radius = 42.0
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("1_l14sw")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -100
+
+[node name="Background" type="TextureRect" parent="CanvasLayer"]
+z_index = -100
+offset_right = 1149.0
+offset_bottom = 647.0
+scale = Vector2(1.56, 1.48)
+texture = ExtResource("1_0smbm")
+stretch_mode = 1
+
+[node name="Player" parent="." instance=ExtResource("2_junyw")]
+position = Vector2(468, 128)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(468, 128)
+zoom = Vector2(0.5, 0.5)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+
+[node name="Maze" parent="." instance=ExtResource("4_kb2sd")]
+z_index = -50
+position = Vector2(587, 124)
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+visible = false
+position = Vector2(126, 373)
+gravity_scale = 0.0
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+texture = ExtResource("5_vet02")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("CircleShape2D_1l612")
+
+[connection signal="body_exited" from="Maze" to="." method="_on_maze_body_exited"]
+[connection signal="body_exited" from="Maze" to="Player" method="_on_maze_body_exited"]
